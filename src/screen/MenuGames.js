@@ -7,10 +7,13 @@ const MenuGames = ({navigation}) => {
   return (
     <FixedContainer style={styles.menuContainer}>
       <TouchableOpacity onPress={() => navigation.navigate('GameController')}>
-        <Text>2048 Games</Text>
+        <Text style={{marginVertical: 20}}>2048 Games</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('HomePacMan')}>
-        <Text>PacMan Games</Text>
+        <Text style={styles.viewText}>PacMan Games</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('AnimatedTest')}>
+        <Text style={styles.viewText}>Custom Animated View</Text>
       </TouchableOpacity>
     </FixedContainer>
   );
@@ -21,5 +24,8 @@ const styles = StyleSheet.create({
   menuContainer: {
     flex: 1,
     alignItems: 'center',
+  },
+  viewText: {
+    marginBottom: 20,
   },
 });

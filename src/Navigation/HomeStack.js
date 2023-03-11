@@ -6,6 +6,7 @@ import MenuGames from '../screen/MenuGames';
 import GameController from '../GameController';
 import Start from '../screen/Start';
 import HomePacMan from '../screen/HomePacMan';
+import Animated from '../screen/Animated';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ const HomeStack = () => {
         <Stack.Screen name="MenuGames" component={MenuGames} />
         <Stack.Screen name="GameController" component={GameController} />
         <Stack.Screen name="HomePacMan" component={HomePacMan} />
+        <Stack.Screen name="AnimatedTest" component={Animated} />
       </Stack.Navigator>
     </NavigationContainer>
   );

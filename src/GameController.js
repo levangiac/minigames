@@ -1,23 +1,24 @@
 import React, {useCallback, useState} from 'react';
 import {
-  View,
+  Alert,
+  Dimensions,
   StyleSheet,
   Text,
-  Dimensions,
   TouchableOpacity,
-  Alert,
+  View,
 } from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
 
 import {
+  checkScore,
+  checkWin,
   generateRandom,
   getEmptyBoard,
+  isOver,
+  moveDown,
   moveLeft,
   moveRight,
   moveUp,
-  moveDown,
-  checkWin,
-  isOver,
 } from './GameBoard';
 
 import Cell from './Cell';
@@ -26,7 +27,7 @@ var width = Dimensions.get('window').width;
 
 const GameController = ({navigation}) => {
   const [board, updateBoard] = useState(generateRandom(getEmptyBoard()));
-
+  const [hightScore, setHightScore] = useState(0);
   const checkEndGame = useCallback(() => {
     if (checkWin(board)) {
       Alert.alert('You win!');
@@ -37,29 +38,33 @@ const GameController = ({navigation}) => {
     }
   }, [board]);
 
-  const left = () => {
+  const left = useCallback(() => {
     const newBoard = moveLeft(board);
     updateBoard(generateRandom(newBoard));
     checkEndGame();
-  };
+    setHightScore(checkScore(newBoard));
+  }, [board, hightScore]);
 
-  const right = () => {
+  const right = useCallback(() => {
     const newBoard = moveRight(board);
     updateBoard(generateRandom(newBoard));
     checkEndGame();
-  };
+    setHightScore(checkScore(newBoard));
+  }, [board, hightScore]);
 
-  const up = () => {
+  const up = useCallback(() => {
     const newBoard = moveUp(board);
     updateBoard(generateRandom(newBoard));
     checkEndGame();
-  };
+    setHightScore(checkScore(newBoard));
+  }, [board, hightScore]);
 
-  const down = () => {
+  const down = useCallback(() => {
     const newBoard = moveDown(board);
     updateBoard(generateRandom(newBoard));
     checkEndGame();
-  };
+    setHightScore(checkScore(newBoard));
+  }, [board, hightScore]);
 
   return (
     <GestureRecognizer
@@ -68,7 +73,8 @@ const GameController = ({navigation}) => {
       onSwipeRight={right}
       onSwipeUp={up}
       onSwipeDown={down}>
-      <Text style={styles.headerStyle}>HELLO 2048</Text>
+      <Text style={styles.headerStyle}>High Score</Text>
+      <Text style={styles.scoreStyles}>{hightScore}</Text>
       <View style={styles.viewButtonRow}>
         <TouchableOpacity
           style={[
@@ -80,7 +86,10 @@ const GameController = ({navigation}) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.newGameStyle}
-          onPress={() => updateBoard(generateRandom(getEmptyBoard()))}>
+          onPress={() => {
+            setHightScore(0);
+            updateBoard(generateRandom(getEmptyBoard()));
+          }}>
           <Text style={styles.textRenew}>NEW GAME</Text>
         </TouchableOpacity>
       </View>
@@ -99,11 +108,12 @@ const GameController = ({navigation}) => {
 
 const styles = StyleSheet.create({
   headerStyle: {
-    padding: 40,
     fontSize: 50,
     textAlign: 'center',
     color: 'olive',
     fontWeight: 'bold',
+    paddingVertical: 20,
+    paddingHorizontal: 40,
   },
   boardStyle: {
     width: width,
@@ -129,6 +139,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  scoreStyles: {
+    fontSize: 50,
+    textAlign: 'center',
+    color: 'olive',
+    fontWeight: 'bold',
+    paddingBottom: 20,
   },
 });
 

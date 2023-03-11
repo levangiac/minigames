@@ -2,7 +2,7 @@ export const getEmptyBoard = () => [
   [0, 0, 0, 0],
   [0, 0, 0, 0],
   [0, 0, 0, 0],
-  [0, 0, 0, 0]
+  [0, 0, 0, 0],
 ];
 
 const hasValue = (board, value) => {
@@ -16,7 +16,7 @@ const hasValue = (board, value) => {
   return false;
 };
 
-export const isFull = (board) => {
+export const isFull = board => {
   return !hasValue(board, 0);
 };
 
@@ -26,7 +26,7 @@ const getRandomPosition = () => {
   return [rowPosition, colPosition];
 };
 
-export const generateRandom = (board) => {
+export const generateRandom = board => {
   if (isFull(board)) {
     return board;
   }
@@ -40,7 +40,7 @@ export const generateRandom = (board) => {
   return board;
 };
 
-const compress = (board) => {
+const compress = board => {
   const newBoard = getEmptyBoard();
   for (let i = 0; i < board.length; i++) {
     let colIndex = 0;
@@ -48,13 +48,18 @@ const compress = (board) => {
       if (board[i][j] !== 0) {
         newBoard[i][colIndex] = board[i][j];
         colIndex++;
+        console.log(
+          '🚀 ~ file: GameBoard.js:52~ checkScore ~ board[i][j]',
+          board[i][j],
+        );
       }
     }
   }
+
   return newBoard;
 };
 
-const merge = (board) => {
+const merge = board => {
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[i].length - 1; j++) {
       if (board[i][j] !== 0 && board[i][j] === board[i][j + 1]) {
@@ -67,13 +72,14 @@ const merge = (board) => {
   return board;
 };
 
-export const moveLeft = (board) => {
+export const moveLeft = board => {
   const newBoard1 = compress(board);
   const newBoard2 = merge(newBoard1);
+
   return compress(newBoard2);
 };
 
-const reverse = (board) => {
+const reverse = board => {
   const reverseBoard = getEmptyBoard();
 
   for (let i = 0; i < board.length; i++) {
@@ -85,13 +91,13 @@ const reverse = (board) => {
   return reverseBoard;
 };
 
-export const moveRight = (board) => {
+export const moveRight = board => {
   const reversedBoard = reverse(board);
   const newBoard = moveLeft(reversedBoard);
   return reverse(newBoard);
 };
 
-const rotateLeft = (board) => {
+const rotateLeft = board => {
   const rotateBoard = getEmptyBoard();
 
   for (let i = 0; i < board.length; i++) {
@@ -103,7 +109,7 @@ const rotateLeft = (board) => {
   return rotateBoard;
 };
 
-const rotateRight = (board) => {
+const rotateRight = board => {
   const rotateBoard = getEmptyBoard();
 
   for (let i = 0; i < board.length; i++) {
@@ -115,20 +121,32 @@ const rotateRight = (board) => {
   return rotateBoard;
 };
 
-export const moveUp = (board) => {
+export const moveUp = board => {
   const rotateBoard = rotateLeft(board);
   const newBoard = moveLeft(rotateBoard);
   return rotateRight(newBoard);
 };
 
-export const moveDown = (board) => {
+export const moveDown = board => {
   const rotateBoard = rotateRight(board);
   const newBoard = moveLeft(rotateBoard);
   return rotateLeft(newBoard);
 };
 
-export const checkWin = (board) => {
+export const checkWin = board => {
   return hasValue(board, 2048);
+};
+export const checkScore = board => {
+  let maxCurrentScore = 0;
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[i].length; j++) {
+      if (board[i][j] > maxCurrentScore) {
+        maxCurrentScore = board[i][j];
+      }
+    }
+  }
+
+  return maxCurrentScore;
 };
 
 const hasDiff = (board, updatedBoard) => {
@@ -142,7 +160,7 @@ const hasDiff = (board, updatedBoard) => {
   return false;
 };
 
-export const isOver = (board) => {
+export const isOver = board => {
   if (hasDiff(board, moveLeft(board))) {
     return false;
   }
